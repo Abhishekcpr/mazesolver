@@ -1,0 +1,57 @@
+body{
+    background-color: rgb(202, 186, 216);
+}
+
+h1{
+    text-align: center;
+    color: green;
+}
+
+
+            /* FOR BUTTONS  */
+/* ########################################  */
+
+.control-buttons
+{
+    display: flex;
+    justify-content: center;
+    gap : 20px ;
+}
+
+
+
+
+
+
+/* ############################################# */
+
+
+/* FOR Table  */
+/* Apply general styling to the table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin : 20px 0 0 0 ;
+  }
+  
+  /* Add borders to table cells */
+  td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    background-color: whitesmoke;
+  }
+  
+ 
+  
+  /* Add a subtle box shadow to the table */
+  table {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Make the table responsive */
+  @media (max-width: 600px) {
+    td, th {
+      padding: 4px;
+    }
+  }
+  

@@ -214,10 +214,10 @@ myTable.addEventListener("mouseover", (event) => {
     const id = event.target.id ;
 
     const [i,j] = getIndices(id) ;
-    console.log([i,j]);
+    // console.log([i,j]);
 
    
-    console.log(boardMatrix[i][j]  + " ->")
+    // console.log(boardMatrix[i][j]  + " ->")
     boardMatrix[i][j] = 1 ;
     cell.style.backgroundColor = colorDefinition.obstacle;
 
@@ -345,71 +345,104 @@ alert("No path found")
 
 }
 
-function moveToTheTarget()
+async function moveToTheTarget()
 {
-  var i = targetIndex[0] ; 
-  var j = targetIndex[1] ;
+  let i = targetIndex[0] ;
+  let j = targetIndex[1] ;
 
-  while(i!= sourceIndex[0] && j!= sourceIndex[1])
+  let counter = distanceMatrix[i][j] ;
+
+  var I=0
+
+  let targetId = makeId(i,j)
+  document.getElementById(targetId).style.backgroundColor = colorDefinition.shortestPath ;
+  while(i!= sourceIndex[0] ||  j!= sourceIndex[1] && I<1000 )
   {
+    I++;
+    console.log("running...");
 
-    id  = makeId(i,j)
-    takeId = document.getElementById(id)
-    if(takeId != null)
+
+
+    if(i < numberOfRows -1 && distanceMatrix[i+1][j] == counter-1)
     {
-      takeId.style.backgroundColor = colorDefinition.shortestPath ;
+       let takeId = makeId(i+1,j) ;
+       let element = document.getElementById(takeId) ;
+       element.style.backgroundColor = colorDefinition.shortestPath ;
+       distanceMatrix[i+1][j] = 0 ;
+       counter-- ;
+       i = i+1 ;
+
+       await delay(10) ;
     }
 
-    var currentDistance = distanceMatrix[i][j] ;
-
-    if(i < numberOfRows-1 && distanceMatrix[i+1][j] == currentDistance -1)
+    if(j < numberOfColumns -1 && distanceMatrix[i][j+1] == counter-1)
     {
-      currentDistance-- ;
-      i = i+1 ;
-
-    }
-
-    if(i > 0 && distanceMatrix[i-1][j] == currentDistance -1)
-    {
-      i = i-1 ;
-      currentDistance-- ;
-
-      
-    }
-
-    if(j < numberOfColumns-1 && distanceMatrix[i][j+1] == currentDistance -1)
-    {
+       let takeId = makeId(i,j+1) ;
+       let element = document.getElementById(takeId) ;
+       element.style.backgroundColor = colorDefinition.shortestPath ;
+       distanceMatrix[i][j+1] = 0 ;
+       counter-- ;
       j = j + 1 ;
-      currentDistance-- ;
 
-      
+      await delay(10) ;
     }
 
-    if( j > 0 && distanceMatrix[i][j-1] == currentDistance -1)
+    if(i > 0  && distanceMatrix[i-1][j] == counter-1)
     {
-     j = j-1 ;
-     currentDistance-- ;
-      
+       let takeId = makeId(i-1,j) ;
+       let element = document.getElementById(takeId) ;
+       element.style.backgroundColor = colorDefinition.shortestPath ;
+       distanceMatrix[i-1][j] = 0 ;
+       counter-- ;
+       i = i-1 ;
+
+       await delay(10) ;
+    }
+
+    if(j > 0  && distanceMatrix[i][j-1] == counter-1)
+    {
+       let takeId = makeId(i,j-1) ;
+       let element = document.getElementById(takeId) ;
+       element.style.backgroundColor = colorDefinition.shortestPath ;
+       distanceMatrix[i][j-1]  = 0 ;
+       counter-- ;
+      j = j - 1 ;
+
+      await delay(10) ;
     }
 
 
   }
 
 
+
 }
+
+
 document.querySelector("#start").addEventListener("click",(event)=>{
 
     if(targetSet == true && sourceSet == true)
     {
       findShortestPath() ;
-      if(pathFound == true)
-      moveToTheTarget() ;
 
+
+      
       console.log(distanceMatrix)  
        console.log(boardMatrix)  
-
+       
     }
 })
+
+document.querySelector("#findPath").addEventListener("click",(event)=>{
+
+  if(targetSet == true && sourceSet == true && pathFound == true)
+  {
+    moveToTheTarget() ;
+     
+  }
+})
+
+
 
 
 

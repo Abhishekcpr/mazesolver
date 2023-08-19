@@ -18,6 +18,7 @@ const colorDefinition = {
     target : "#42f59c" ,
     obstacle: "#303240",
     visitPath : "#9bd9e3",
+    visitPath2 : "#91d678",
     shortestPath : "#e34fd2"
 }
 
@@ -47,6 +48,41 @@ class Queue {
       return this.length === 0;
     }
   }
+
+  class Stack {
+    constructor() {
+      this.data = [];
+    }
+  
+    push(value) {
+      this.data.push(value);
+    }
+  
+    pop() {
+      if (!this.sisEmpty()) {
+        return this.data.pop();
+      }
+      throw new Error('Stack is empty.');
+    }
+  
+    top() {
+      if (!this.sisEmpty()) {
+        return this.data[this.data.length - 1];
+      }
+      throw new Error('Stack is empty.');
+    }
+  
+    sisEmpty() {
+      return this.data.length === 0;
+    }
+  
+    size() {
+      return this.data.length;
+    }
+  }
+  
+  
+  
 
   let boardMatrix  ,distanceMatrix ;
 
@@ -418,8 +454,111 @@ async function moveToTheTarget()
 
 }
 
+async function findShortestPathDFS()
+{
+   var s = new Stack() ;
 
-document.querySelector("#start").addEventListener("click",(event)=>{
+ s.push([sourceIndex[0],sourceIndex[1], 1]) ;
+
+  while(!s.sisEmpty() && !pathFound)
+  {
+
+    
+   var front = s.top() ;
+   console.log(front)
+
+    s.pop() ;
+
+   let i = front[0]
+    let j = front[1]
+    let dis = front[2]
+
+    // console.log("running...");
+    
+ 
+     await delay(10) ;
+    if(i == targetIndex[0] && j == targetIndex[1])
+    {
+      pathFound  = true ;
+     alert("Path Found with distance : " + dis) ;
+   
+     break ;
+    }
+    if(i <  numberOfRows-1 && distanceMatrix[i+1][j] == INT_MAX && boardMatrix[i+1][j]==0)
+    {
+
+       id = makeId(i+1,j) ;
+       takeId = document.getElementById(id)
+       {
+        if(takeId !== null )
+        {
+          takeId.style.backgroundColor = colorDefinition.visitPath2 ;
+        }
+       }
+      
+      distanceMatrix[i+1][j]= dis + 1 ;
+        s.push([i+1, j , dis+1]) ;
+    }
+
+     if(i > 0  && distanceMatrix[i-1][j] == INT_MAX && boardMatrix[i-1][j]==0)
+    {
+
+      id = makeId(i-1,j) ;
+      takeId = document.getElementById(id)
+      {
+       if(takeId !== null )
+       {
+         takeId.style.backgroundColor = colorDefinition.visitPath2 ;
+       }
+      }
+
+      distanceMatrix[i-1][j]= dis + 1 ;
+      s.push([i-1, j , dis+1]) ;
+    }
+
+     if(j <  numberOfColumns-1 && distanceMatrix[i][j+1] == INT_MAX && boardMatrix[i][j+1]==0)
+    {
+
+      id = makeId(i,j+1) ;
+      takeId = document.getElementById(id)
+       {
+        if(takeId !== null )
+        {
+          takeId.style.backgroundColor = colorDefinition.visitPath2 ;
+        }
+       }
+
+      distanceMatrix[i][j+1]= dis + 1 ;
+      s.push([i, j+1 , dis+1]) ;
+    }
+
+     if(j > 0 && distanceMatrix[i][j-1] == INT_MAX && boardMatrix[i][j-1]==0)
+    {
+      id = makeId(i,j-1) ;
+      takeId = document.getElementById(id)
+       {
+        if(takeId !== null )
+        {
+          takeId.style.backgroundColor = colorDefinition.visitPath2 ;
+        }
+       }
+
+      distanceMatrix[i][j-1]= dis + 1 ;
+      s.push([i, j-1 , dis+1]) ;
+    }
+
+  }
+
+  if(s.sisEmpty())
+alert("No path found")
+
+
+}
+
+
+
+
+document.querySelector("#startbfs").addEventListener("click",(event)=>{
 
     if(targetSet == true && sourceSet == true)
     {
@@ -427,10 +566,24 @@ document.querySelector("#start").addEventListener("click",(event)=>{
 
 
       
-      console.log(distanceMatrix)  
-       console.log(boardMatrix)  
+      // console.log(distanceMatrix)  
+      //  console.log(boardMatrix)  
        
     }
+})
+
+document.querySelector("#startdfs").addEventListener("click",(event)=>{
+
+  if(targetSet == true && sourceSet == true)
+  {
+    findShortestPathDFS() ;
+
+
+    
+    // console.log(distanceMatrix)  
+    //  console.log(boardMatrix)  
+     
+  }
 })
 
 document.querySelector("#findPath").addEventListener("click",(event)=>{
